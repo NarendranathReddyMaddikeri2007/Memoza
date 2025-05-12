@@ -15,7 +15,7 @@ class NotesRepository {
     return box.values.toList().cast<Notes>();
   }
 
-  Future<void> createNotes(Notes notes) async {
+  Future<void> createNote(Notes notes) async {
     await box.add(notes);
   }
 
