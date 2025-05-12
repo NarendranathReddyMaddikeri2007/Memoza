@@ -3,6 +3,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:memoza/data/models/note/note_model.dart';
 import 'package:memoza/data/models/settings/settings_model.dart';
 import 'package:memoza/data/repositories/notes/notes_repository.dart';
+import 'package:memoza/data/repositories/settings/settings_repository.dart';
 import 'package:path_provider/path_provider.dart';
 
 void main() async {
@@ -16,8 +17,9 @@ void main() async {
   Hive.registerAdapter(SettingsAdapter());
 
   Box<Notes> notesBox = await NotesRepository.openBox('notes') as Box<Notes>;
-  //Box<Settings> settingsBox = await HiveSettingsDatabase.openBox('settings');
+  Box<Settings> settingsBox = await SettingsRepository.openBox('settings');
   
+  SettingsRepository(box: settingsBox).initializeSettings();
 
 
   runApp(const MyApp());
