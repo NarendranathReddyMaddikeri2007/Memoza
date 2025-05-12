@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:memoza/data/models/settings/settings_model.dart';
 import 'package:memoza/data/repositories/notes/notes_repository.dart';
 import 'package:memoza/data/repositories/settings/settings_repository.dart';
 import 'package:memoza/presentation/bloc/notes_bloc/notes_bloc.dart';
+import 'package:memoza/presentation/pages/home/home.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'presentation/cubit/settings/settings_cubit.dart';
@@ -58,7 +60,7 @@ class MyApp extends StatelessWidget {
               theme: lightTheme,
               darkTheme: darkTheme,
               themeMode: state.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-              home: const MyHomePage(title: 'NARENDRANATH'),
+              home: HomeScreen(),
             );
           },
         ));
@@ -111,4 +113,69 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+class Note {
+  final String title;
+
+  final String description;
+
+  final String date;
+
+  final bool isBookMarked;
+
+  const Note(
+      {this.isBookMarked = false,
+      required this.title,
+      required this.description,
+      required this.date});
+
+  @override
+  List<Object?> get props => [title, date, description, isBookMarked];
+
+
+   Note copyWith({
+    String? title,
+    String? date,
+    String? description,
+    bool? isBookMarked,
+  }) {
+    return Note(
+      title: title ?? this.title,
+      date: date ?? this.date,
+      description: description ?? this.description,
+      isBookMarked: isBookMarked ?? this.isBookMarked,
+    );
+  }
+}
+
+
+
+final List<Note> notes = generateNotes(100);
+
+List<Note> generateNotes(int count) {
+  final random = Random();
+  final titles = ['Meeting', 'Groceries', 'Homework', 'Workout', 'Plan'];
+  final descriptions = [
+    'Complete the assigned task',
+    'Buy vegetables and fruits',
+    'Maths and Science chapters',
+    'Chest and back routine',
+    'Outline weekly goals'
+  ];
+
+  return List.generate(count, (index) {
+    final title = '${titles[random.nextInt(titles.length)]} ${index + 1}';
+    final description = descriptions[random.nextInt(descriptions.length)];
+    final date =
+        '${random.nextInt(28) + 1}-${random.nextInt(12) + 1}-2025'; // format: dd-mm-yyyy
+    final isBookMarked = random.nextBool();
+
+    return Note(
+      title: title,
+      description: description,
+      date: date,
+      isBookMarked: isBookMarked,
+    );
+  });
 }
