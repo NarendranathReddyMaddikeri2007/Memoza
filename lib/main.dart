@@ -11,6 +11,8 @@ import 'package:memoza/data/repositories/settings/settings_repository.dart';
 import 'package:memoza/presentation/bloc/notes_bloc/notes_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'presentation/cubit/settings/settings_cubit.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -40,21 +42,23 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) =>
-                NotesBloc(notesRepository: NotesRepository(box: notesBox))
-                  ..add(LoadNotesEvent()),
+              create: (context) =>
+                  NotesBloc(notesRepository: NotesRepository(box: notesBox))
+                    ..add(LoadNotesEvent())),
+          BlocProvider(
+            create: (context) => SettingsCubit(
+              settingsRepository: SettingsRepository(box: settingsBox),
+            ),
           )
         ],
-        child: BlocBuilder(
+        child: BlocBuilder<SettingsCubit, Settings>(
           builder: (context, state) {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
-              darkTheme: darkTheme,
               theme: lightTheme,
-              themeMode: ThemeMode.dark,
-              home: const MyHomePage(
-                title: 'NARENDRANATH',
-              ),
+              darkTheme: darkTheme,
+              themeMode: state.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+              home: const MyHomePage(title: 'NARENDRANATH'),
             );
           },
         ));

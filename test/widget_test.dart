@@ -7,13 +7,21 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive/hive.dart';
+import 'package:memoza/data/models/note/note_model.dart';
+import 'package:memoza/data/models/settings/settings_model.dart';
+import 'package:memoza/data/repositories/notes/notes_repository.dart';
+import 'package:memoza/data/repositories/settings/settings_repository.dart';
 
 import 'package:memoza/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+
+    Box<Notes> notesBox = await NotesRepository.openBox('notes') as Box<Notes>;
+  Box<Settings> settingsBox = await SettingsRepository.openBox('settings');
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget( MyApp(notesBox: notesBox, settingsBox: settingsBox,));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
